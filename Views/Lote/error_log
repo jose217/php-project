@@ -1,0 +1,1 @@
+[19-Jan-2021 09:29:09 America/Chicago] PHP Fatal error:  Call to a member function getListaElementos() on null in /home2/motion/public_html/dev/app-medicos/Views/Historia/show.php on line 75
