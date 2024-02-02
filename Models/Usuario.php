@@ -7,37 +7,18 @@
 class Usuario
 {
 	private $id;
-	private $alias;
-	private $nombres;
-	private $apellidos;
+	private $usuario;
 	private $email;
-	private $clave;
-	private $pregunta;
-	private $respuesta;
-	private $fecha_ingreso;
-	private $pago;
-	private $acode;
-	private $estado;
-	private $foto;
+	private $password;
 	
 	
-	function __construct($id,$alias,$nombres,$apellidos,$email,$clave,$pregunta,$respuesta,$fecha_ingreso,$pago,$acode,$estado,$foto)
+	function __construct($id,$usuario,$email,$password)
 	{
 		$this->setId($id);
-		$this->setAlias($alias);
-		$this->setNombres($nombres);
-		$this->setApellidos($apellidos);
+		$this->setUsuario($usuario);
 		$this->setEmail($email);
-		$this->setClave($clave);
-		$this->setPregunta($pregunta);
-		$this->setRespuesta($respuesta);
-		$this->setFecha_Ingreso($fecha_ingreso);
-		$this->setPago($pago);
-		$this->setAcode($acode);
-		$this->setEstado($estado);
-		$this->setFoto($foto);
+		$this->setPassword($password);
 	}
-
 
 	public function getId(){
 		return $this->id;
@@ -47,28 +28,12 @@ class Usuario
 		$this->id = $id;
 	}
 
-	public function getAlias(){
-		return $this->alias;
+	public function getUsuario(){
+		return $this->usuario;
 	}
 
-	public function setAlias($alias){
-		$this->alias = $alias;
-	}
-
-	public function getNombres(){
-		return $this->nombres;
-	}
-
-	public function setNombres($nombres){
-		$this->nombres = $nombres;
-	}
-
-	public function getApellidos(){
-		return $this->apellidos;
-	}
-
-	public function setApellidos($apellidos){
-		$this->apellidos = $apellidos;
+	public function setUsuario($usuario){
+		$this->usuario = $usuario;
 	}
 
 	public function getEmail(){
@@ -79,70 +44,13 @@ class Usuario
 		$this->email = $email;
 	}
 
-	public function getClave(){
-		return $this->clave;
+	public function getPassword(){
+		return $this->password;
 	}
 
-	public function setClave($clave){
-		$this->clave = $clave;
+	public function setPassword($password){
+		$this->password = $password;
 	}
-
-	public function getPregunta(){
-		return $this->pregunta;
-	}
-
-	public function setPregunta($pregunta){
-		$this->pregunta = $pregunta;
-	}
-
-	public function getRespuesta(){
-		return $this->respuesta;
-	}
-
-	public function setRespuesta($respuesta){
-		$this->respuesta = $respuesta;
-	}
-
-	public function getFecha_Ingreso(){
-		return $this->fecha_ingreso;
-	}
-
-	public function setFecha_Ingreso($fecha_ingreso){
-		$this->fecha_ingreso=$fecha_ingreso;
-	}
-
-	public function getPago(){
-		return $this->pago;
-	}
-
-	public function setPago($pago){
-		$this->pago=$pago;
-	}
-
-	public function getAcode(){
-		return $this->acode;
-	}
-
-	public function setAcode($acode){
-		$this->acode=$acode;
-	}
-
-	public function getEstado(){
-		return $this->estado;
-	}
-
-	public function setEstado($estado){
-		$this->estado=$estado;
-	}
-
-	public function getFoto(){
-		return $this->foto;
-	}
-
-	public function setFoto($foto){
-		$this->foto=$foto;
-	}
-
 
 	//opciones CRUD
 
@@ -154,7 +62,7 @@ class Usuario
 
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($sql->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['alias'], $usuario['nombres'],$usuario['apellidos'],$usuario['email'], $usuario['clave'], $usuario['respuesta'], $usuario['pregunta'],$usuario['fecha_ingreso'],$usuario['pago'],$usuario['acode'],$usuario['estado'],$usuario['foto']);
+			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
 		}
 		return $listaUsuarios;
 	}
@@ -284,7 +192,7 @@ class Usuario
 		$select->execute();
 		//asignarlo al objeto usuario
 		$usuarioDb=$select->fetch();
-		$usuario= new Usuario($usuarioDb['id'],$usuarioDb['alias'],$usuarioDb['nombres'],$usuarioDb['apellidos'],$usuarioDb['email'], $usuarioDb['clave'],$usuarioDb['pregunta'],$usuarioDb['respuesta'],$usuarioDb['fecha_ingreso'],$usuarioDb['pago'],$usuarioDb['acode'],$usuarioDb['estado'],$usuarioDb['foto']);
+		$usuario= new Usuario($usuarioDb['id'],$usuarioDb['usuario'],$usuarioDb['email'],$usuarioDb['password']);
 		//var_dump($usuario);
 		//die();
 		return $usuario;
@@ -300,19 +208,19 @@ class Usuario
 		$query->execute();
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($query->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['alias'], $usuario['nombres'],$usuario['apellidos'],$usuario['email'], $usuario['clave'], $usuario['respuesta'], $usuario['pregunta'],$usuario['fecha_ingreso'],$usuario['pago'],$usuario['acode'],$usuario['estado'],$usuario['foto']);
+			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
 		}
 		return $listaUsuarios;
 	}	
 	public static function findByname($name){
 		$listaUsuarios =[];
 		$db=Db::getConnect();
-		$query=$db->prepare('SELECT * FROM usuarios WHERE NOMBRES=:nombres');
-		$query->bindValue("nombres",$name);		
+		$query=$db->prepare('SELECT * FROM usuarios WHERE usuario=:usuario');
+		$query->bindValue("usuario",$name);		
 		$query->execute();
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($query->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['alias'], $usuario['nombres'],$usuario['apellidos'],$usuario['email'], $usuario['clave'], $usuario['respuesta'], $usuario['pregunta'],$usuario['fecha_ingreso'],$usuario['pago'],$usuario['acode'],$usuario['estado'],$usuario['foto']);
+			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
 		}
 		return $listaUsuarios;
 	}	

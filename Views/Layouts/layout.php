@@ -9,16 +9,18 @@ ob_start();
 <html lang="es">
 <head>
 
-	<title>SEAC-project</title>
+	<title>UTEC-PROJECT</title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Librerias Boostrap-->
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/MBD5/css/mdb.min.css">
 	<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/> -->
 	<!-- jQuery library -->
 	<script src="assets/js/jquery-3.5.1.min.js"></script>
 	<script src="assets/js/ResponsiveMv.js"></script>
+	<script src="asstes/MBD5/js/mdb.es.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/disableautofill/src/jquery.disableAutoFill.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
@@ -53,7 +55,9 @@ ob_start();
 <body>
 <header>
 <?php
+	if(!isset($_SESSION)){
 		require_once('cabecera.php');
+	}
 ?>
 </header>
 
@@ -73,7 +77,9 @@ ob_start();
 
 <footer>
 <?php
+	if(!isset($_SESSION)){
 		include_once('footer.php');
+	}
 ?>
 </footer>
 </body>

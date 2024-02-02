@@ -269,13 +269,9 @@ class UsuarioController
 			// echo 'isset($usuarios) && !empty($usuarios) <br/>';
 			foreach($usuarios as $usuario){
 				// echo 'foreach($usuarios as $usuario) <br/>';
-				if(password_verify($_POST['pwd'],$usuario->getClave()) && filter_var($usuario->getEstado(),FILTER_DEFAULT)=='activo'){					
+				if(password_verify($_POST['pwd'],$usuario->getPassword())){					
 					$_SESSION['usuario_id']=$usuario->getId();
-					$_SESSION['usuario_alias']=$usuario->getAlias();
-					$_SESSION['usuario_nombres']=$usuario->getNombres();
-					$_SESSION['usuario_apellidos']=$usuario->getApellidos();
-					$_SESSION['usuario_foto']=$usuario->getFoto();
-					$_SESSION['usuario_estado']=$usuario->getEstado();
+					$_SESSION['usuario_usuario']=$usuario->getUsuario();
 					$_SESSION['usuario']=TRUE;
 				}
 			}
@@ -316,53 +312,53 @@ class UsuarioController
 		header('Location: index.php');
 	}
 
-	public function validarCedula(){
-		// fuerzo parametro de entrada a string
-		$retorno="";
-        $numero = $_POST['cedula'];
-        //var_dump($numero);
-        //die();
-        // borro por si acaso errores de llamadas anteriores.
-        //$this->setError('');
-        // validaciones
+	// public function validarCedula(){
+	// 	// fuerzo parametro de entrada a string
+	// 	$retorno="";
+    //     $numero = $_POST['cedula'];
+    //     //var_dump($numero);
+    //     //die();
+    //     // borro por si acaso errores de llamadas anteriores.
+    //     //$this->setError('');
+    //     // validaciones
 
-            //$this->validarInicial($numero, '10');
-           // $this->validarCodigoProvincia(substr($numero, 0, 2));
-            //$this->validarTercerDigito($numero[2], 'cedula');
-            $this->algoritmoModulo10(substr($numero, 0, 9), $numero[9]);
-            $retorno='SI';
+    //         //$this->validarInicial($numero, '10');
+    //        // $this->validarCodigoProvincia(substr($numero, 0, 2));
+    //         //$this->validarTercerDigito($numero[2], 'cedula');
+    //         $this->algoritmoModulo10(substr($numero, 0, 9), $numero[9]);
+    //         $retorno='SI';
 
-        $datos = array('estado' => 'ok','nombre' => $nombre, 'apellido' => $apellido, 'edad' => $edad);
-        echo  json_encode($datos, true);
-	}
+    //     $datos = array('estado' => 'ok','nombre' => $nombre, 'apellido' => $apellido, 'edad' => $edad);
+    //     echo  json_encode($datos, true);
+	// }
 
-	public function algoritmoModulo10($digitosIniciales, $digitoVerificador)
-    {
-        $arrayCoeficientes = array(2,1,2,1,2,1,2,1,2);
-        $digitoVerificador = (int)$digitoVerificador;
-        $digitosIniciales = str_split($digitosIniciales);
-        $total = 0;
-        foreach ($digitosIniciales as $key => $value) {
-            $valorPosicion = ( (int)$value * $arrayCoeficientes[$key] );
-            if ($valorPosicion >= 10) {
-                $valorPosicion = str_split($valorPosicion);
-                $valorPosicion = array_sum($valorPosicion);
-                $valorPosicion = (int)$valorPosicion;
-            }
-            $total = $total + $valorPosicion;
-        }
-        $residuo =  $total % 10;
-        if ($residuo == 0) {
-            $resultado = 0;
-        } else {
-            $resultado = 10 - $residuo;
-        }
-        if ($resultado != $digitoVerificador) {
-            //return false;
-            //throw new Exception('Dígitos iniciales no validan contra Dígito Idenficador');
-        }
-        return true;
-    }
+	// public function algoritmoModulo10($digitosIniciales, $digitoVerificador)
+    // {
+    //     $arrayCoeficientes = array(2,1,2,1,2,1,2,1,2);
+    //     $digitoVerificador = (int)$digitoVerificador;
+    //     $digitosIniciales = str_split($digitosIniciales);
+    //     $total = 0;
+    //     foreach ($digitosIniciales as $key => $value) {
+    //         $valorPosicion = ( (int)$value * $arrayCoeficientes[$key] );
+    //         if ($valorPosicion >= 10) {
+    //             $valorPosicion = str_split($valorPosicion);
+    //             $valorPosicion = array_sum($valorPosicion);
+    //             $valorPosicion = (int)$valorPosicion;
+    //         }
+    //         $total = $total + $valorPosicion;
+    //     }
+    //     $residuo =  $total % 10;
+    //     if ($residuo == 0) {
+    //         $resultado = 0;
+    //     } else {
+    //         $resultado = 10 - $residuo;
+    //     }
+    //     if ($resultado != $digitoVerificador) {
+    //         //return false;
+    //         //throw new Exception('Dígitos iniciales no validan contra Dígito Idenficador');
+    //     }
+    //     return true;
+    // }
 
     public function setError($newError)
     {
@@ -382,99 +378,99 @@ class UsuarioController
 		require_once('Views/User/confirmationRecovery.php');
 	}
 
-	public function RecEmailVerify(){
-		//validar formulario registrar
-		$res = $_POST['g-recaptcha-response'];
-		if(!empty($res)){
-			//prod
-			// $clave_secreta = "6Lftf_caAAAAAB4oVt5ia46EdTJEibhiLxaX-F6J";
-			//devlocal
-			//$clave_secreta = "6Le1qVEdAAAAAOsKa3gWJFvaGpfb1RUIr0YqKknZ";
-			// devonline
-			$clave_secreta = "6LeB3DMaAAAAANn1yKdlWD0bFsKV5Yw9B1YZ6jDu";
-			$remoto = $_SERVER['REMOTE_ADDR'];
-			$verificacion_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$clave_secreta&response=$res&remoteip=$remoto");
+	// public function RecEmailVerify(){
+	// 	//validar formulario registrar
+	// 	$res = $_POST['g-recaptcha-response'];
+	// 	if(!empty($res)){
+	// 		//prod
+	// 		// $clave_secreta = "6Lftf_caAAAAAB4oVt5ia46EdTJEibhiLxaX-F6J";
+	// 		//devlocal
+	// 		//$clave_secreta = "6Le1qVEdAAAAAOsKa3gWJFvaGpfb1RUIr0YqKknZ";
+	// 		// devonline
+	// 		$clave_secreta = "6LeB3DMaAAAAANn1yKdlWD0bFsKV5Yw9B1YZ6jDu";
+	// 		$remoto = $_SERVER['REMOTE_ADDR'];
+	// 		$verificacion_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$clave_secreta&response=$res&remoteip=$remoto");
 
-			//verificacion de la validacion del recaptcha en el servidor
-			$jsonRes = json_decode($verificacion_server);
-			if($jsonRes->success){
-				//si el recaptcha es verificado ejecurara lo siguiente:
-					$usuarios=[];
-					$usuarios=Usuario::All();
-					$existe=False;
-					foreach ($usuarios as $usuario) {
+	// 		//verificacion de la validacion del recaptcha en el servidor
+	// 		$jsonRes = json_decode($verificacion_server);
+	// 		if($jsonRes->success){
+	// 			//si el recaptcha es verificado ejecurara lo siguiente:
+	// 				$usuarios=[];
+	// 				$usuarios=Usuario::All();
+	// 				$existe=False;
+	// 				foreach ($usuarios as $usuario) {
 						
-						if (strcmp($usuario->getEmail(),$_POST['email'])==0) {
-							$existe=True;
-						}
-					}
+	// 					if (strcmp($usuario->getEmail(),$_POST['email'])==0) {
+	// 						$existe=True;
+	// 					}
+	// 				}
 
-					if (!$existe){
-						echo "<script>alert('Correo no encontrado, verifique de nuevo o registre un nuevo correo.')</script>";
-						$this->recovery();
-					}else{
-						$acode=rand(999999,111111);
-						$email=$_POST['email'];
-						$to=$email;
-        				$subject='Restablecer contraseña';
-        				$message = 'Codigo de confirmación: ['.$acode.'] . Por favor no comparta este código por motivos de seguridad.';
-        				$headers = array(
-        				 	'From' => 'app-clinica@motion.com.sv',
-        					'Reply-To' => 'jose360ramos@gmail.com',
-        				 	'X-Mailer' => 'PHP/' . phpversion()
-        				);
-        				mail($to, $subject, $message, $headers);
-						$usuario = new Usuario(NULL,NULL,NULL,NULL,$_POST['email'],NULL,NULL,NULL,NULL,NULL,$acode,NULL,NULL);
-						Usuario::updatecode($usuario);
-						$this->confirmationRecovery();
-					}
-			}else{
-				//si no google verificara si es un proceso anormal
-				echo"<h1 class='mt-2'>Esta ejecutando un proceso irregular</h1>";
+	// 				if (!$existe){
+	// 					echo "<script>alert('Correo no encontrado, verifique de nuevo o registre un nuevo correo.')</script>";
+	// 					$this->recovery();
+	// 				}else{
+	// 					$acode=rand(999999,111111);
+	// 					$email=$_POST['email'];
+	// 					$to=$email;
+    //     				$subject='Restablecer contraseña';
+    //     				$message = 'Codigo de confirmación: ['.$acode.'] . Por favor no comparta este código por motivos de seguridad.';
+    //     				$headers = array(
+    //     				 	'From' => 'app-clinica@motion.com.sv',
+    //     					'Reply-To' => 'jose360ramos@gmail.com',
+    //     				 	'X-Mailer' => 'PHP/' . phpversion()
+    //     				);
+    //     				mail($to, $subject, $message, $headers);
+	// 					$usuario = new Usuario(NULL,NULL,NULL,NULL,$_POST['email'],NULL,NULL,NULL,NULL,NULL,$acode,NULL,NULL);
+	// 					Usuario::updatecode($usuario);
+	// 					$this->confirmationRecovery();
+	// 				}
+	// 		}else{
+	// 			//si no google verificara si es un proceso anormal
+	// 			echo"<h1 class='mt-2'>Esta ejecutando un proceso irregular</h1>";
 
-			}
-		}else{
-			echo"<h1 class='mt-2'>Debe completar el Captcha</1>";
-		}
-	}
+	// 		}
+	// 	}else{
+	// 		echo"<h1 class='mt-2'>Debe completar el Captcha</1>";
+	// 	}
+	// }
 
-	public function confRecovery(){
-		$usuarios=[];
-		$usuarios=Usuario::All();
-		$existe=False;
-		$code=$_POST['acode'];
-		foreach($usuarios as $usuario){
-			if(strcmp($usuario->getAcode(),$code)==0){
-				$existe=True;
-			}
-		}
+	// public function confRecovery(){
+	// 	$usuarios=[];
+	// 	$usuarios=Usuario::All();
+	// 	$existe=False;
+	// 	$code=$_POST['acode'];
+	// 	foreach($usuarios as $usuario){
+	// 		if(strcmp($usuario->getAcode(),$code)==0){
+	// 			$existe=True;
+	// 		}
+	// 	}
 
-		if (!$existe) {
-			echo "<script>alert('El codigo ingresado es incorrecto. Por favor verifique.')</script>";
-			//echo "<script>window.history.back()</script>";
-		}else{
-			$password1=$_POST['pwd'];
-			$password2=$_POST['pwd2'];
-			if($password1==$password2){
-				$usuario = new Usuario(NULL,NULL,NULL,NULL,NULL,$_POST['pwd'],NULL,NULL,NULL,NULL,$acode,NULL,NULL);
-				Usuario::updatepwd($usuario);
-				header('Location: index.php ');
-			}else{
-				echo "<script>alert('Las claves deben coincidir')</script>";
-				$this->confirmationRecovery();
-			}
-		}
-	}
+	// 	if (!$existe) {
+	// 		echo "<script>alert('El codigo ingresado es incorrecto. Por favor verifique.')</script>";
+	// 		//echo "<script>window.history.back()</script>";
+	// 	}else{
+	// 		$password1=$_POST['pwd'];
+	// 		$password2=$_POST['pwd2'];
+	// 		if($password1==$password2){
+	// 			$usuario = new Usuario(NULL,NULL,NULL,NULL,NULL,$_POST['pwd'],NULL,NULL,NULL,NULL,$acode,NULL,NULL);
+	// 			Usuario::updatepwd($usuario);
+	// 			header('Location: index.php ');
+	// 		}else{
+	// 			echo "<script>alert('Las claves deben coincidir')</script>";
+	// 			$this->confirmationRecovery();
+	// 		}
+	// 	}
+	// }
 
 
-	public function sendSMS(){
-		/*
-		* Get API key and Sender ID from
-		* http://springedge.com
-		* Copy php-send-sms-code.php in same directory
-		*/
-		include 'php-send-sms-code.php';
-		$sendsms=new sendsms("1i6xxxxxxxxxxxxxx", "BUxxxx");
-		$sendsms->send_sms("99xxxxxxxx", "test sms"); 
-	}
+	// public function sendSMS(){
+	// 	/*
+	// 	* Get API key and Sender ID from
+	// 	* http://springedge.com
+	// 	* Copy php-send-sms-code.php in same directory
+	// 	*/
+	// 	include 'php-send-sms-code.php';
+	// 	$sendsms=new sendsms("1i6xxxxxxxxxxxxxx", "BUxxxx");
+	// 	$sendsms->send_sms("99xxxxxxxx", "test sms"); 
+	// }
 }?>

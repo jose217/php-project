@@ -1,9 +1,4 @@
 <?php
-	/**
-	* Conexión a la base de datos
-	* Autor: Elivar Largo
-	* Sitio Web: wwww.ecodeup.com
-	*/
 	class Db
 	{
 		private static $instance=NULL;
@@ -15,7 +10,7 @@
 		public static function getConnect(){
 			if (!isset(self::$instance)) {
 				$pdo_options[PDO::ATTR_ERRMODE]=PDO::ERRMODE_EXCEPTION;
-				self::$instance= new PDO('mysql:host=motion.com.sv;dbname=motion_seac','motion_seac','6hWWeuC6l!aE',$pdo_options);
+				self::$instance= new PDO('mysql:host=localhost:85;dbname=php-project-dpweb','develop','Ll.tlhQ*o(UqCdRU',$pdo_options);
 			}
 			return self::$instance;
 		}
