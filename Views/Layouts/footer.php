@@ -1,6 +1,6 @@
 <div id="footer">
       <br/>
       <div class="container">
-        <p class="text-muted credit">APP - Proyecto SEAC, desarrollado por: <a href="http://motion.com.sv">MOTION</a>.</p>
+        <p class="text-muted credit">Sistema de inventarios by JRAMOS dev Solutions.</a>.</p>
      </div>
 </div>

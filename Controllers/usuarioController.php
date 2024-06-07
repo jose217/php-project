@@ -1,15 +1,10 @@
 <?php
-/**
-* Controlador UsuarioController, para administrar los usuarios
-* Autor: Elivar Largo
-* Sitio Web: wwww.ecodeup.com
-* Fecha: 20-03-2017
-*/
 if(!isset($_SESSION))
     {
         session_start();
     }
 
+require_once('Models/Catalogos.php');
 class UsuarioController
 {
 	public function __construct(){}
@@ -53,87 +48,86 @@ class UsuarioController
 
 
 	public function register(){
-		//echo getcwd ();
 		require_once('Views/User/register.php');
 	}
 
 	//guardar
-	public function save1(){
-		//validar formulario registrar
-		$res = $_POST['g-recaptcha-response'];
-		if(!empty($res)){
-			//prd
-			// $clave_secreta = "6Lftf_caAAAAAB4oVt5ia46EdTJEibhiLxaX-F6J";
-			//devlocal
-			// $clave_secreta = "6Le1qVEdAAAAAOsKa3gWJFvaGpfb1RUIr0YqKknZ";
-			// devonline
-			$clave_secreta = "6LeB3DMaAAAAANn1yKdlWD0bFsKV5Yw9B1YZ6jDu";
-			$remoto = $_SERVER['REMOTE_ADDR'];
-			$verificacion_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$clave_secreta&response=$res&remoteip=$remoto");
+	// public function save1(){
+	// 	//validar formulario registrar
+	// 	$res = $_POST['g-recaptcha-response'];
+	// 	if(!empty($res)){
+	// 		//prd
+	// 		// $clave_secreta = "6Lftf_caAAAAAB4oVt5ia46EdTJEibhiLxaX-F6J";
+	// 		//devlocal
+	// 		// $clave_secreta = "6Le1qVEdAAAAAOsKa3gWJFvaGpfb1RUIr0YqKknZ";
+	// 		// devonline
+	// 		$clave_secreta = "6LeB3DMaAAAAANn1yKdlWD0bFsKV5Yw9B1YZ6jDu";
+	// 		$remoto = $_SERVER['REMOTE_ADDR'];
+	// 		$verificacion_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$clave_secreta&response=$res&remoteip=$remoto");
 
-			//verificacion de la validacion del recaptcha en el servidor
-			$jsonRes = json_decode($verificacion_server);
-			if($jsonRes->success){
-				//si el recaptcha es verificado ejecurara lo siguiente:
-					$usuarios=[];
-					$usuarios=Usuario::All();
-					$existe=False;
-					$user1=$_POST['pwd'];
-					$user2=$_POST['pwd2'];
-					foreach ($usuarios as $usuario) {
-						//echo $usuario->alias."<br>".$_POST['alias']."<br>".$usuario->email;
-						if (strcmp($usuario->getAlias(),$_POST['alias'])==0 or strcmp($usuario->getEmail(),$_POST['email'])==0) {
-							$existe=True;
-						}
-					}
+	// 		//verificacion de la validacion del recaptcha en el servidor
+	// 		$jsonRes = json_decode($verificacion_server);
+	// 		if($jsonRes->success){
+	// 			//si el recaptcha es verificado ejecurara lo siguiente:
+	// 				$usuarios=[];
+	// 				$usuarios=Usuario::All();
+	// 				$existe=False;
+	// 				$user1=$_POST['pwd'];
+	// 				$user2=$_POST['pwd2'];
+	// 				foreach ($usuarios as $usuario) {
+	// 					//echo $usuario->alias."<br>".$_POST['alias']."<br>".$usuario->email;
+	// 					if (strcmp($usuario->getAlias(),$_POST['alias'])==0 or strcmp($usuario->getEmail(),$_POST['email'])==0) {
+	// 						$existe=True;
+	// 					}
+	// 				}
 
-					if (!$existe && $user1==$user2){
+	// 				if (!$existe && $user1==$user2){
 
-						$acode=rand(999999,111111);
-						$estado='inactivo';
-						$foto='default.png';
-						$pago=0;
-						$date=date('Y-m-d H:i:s');
-						$email=$_POST['email'];
-            			$usuario=new Usuario(null,$_POST['alias'], $_POST['nombres'],$_POST['apellidos'],$email,$_POST['pwd'],null,null,$date,$pago,$acode,$estado,$foto);
-						Usuario::save($usuario);
-						//var_dump($usuario);
-						//die();
-						$_SESSION['mensaje']='Registro guardado satisfactoriamente';
-						$this->showConfirmation();
-						//enviar_correo */
-						// require_once('Views/Layouts/layout.php');*/
-        				$to=$email;
-        				$subject='Activación de la cuenta ';
-        				$message = 'Codigo de confirmacion: ['.$acode.'] . Por favor no comparta este codigo con nadie por motivos de segurida.';
-        				$headers = array(
-        				 	'From' => 'app-clinica@motion.com.sv',
-        					'Reply-To' => 'jose360ramos@gmail.com',
-        				 	'X-Mailer' => 'PHP/' . phpversion()
-        				);
-        				mail($to, $subject, $message, $headers);
-						//header('Location: index.php');
-						//require_once('Views/Layouts/layout.php');*/
-					}else{
-						$_SESSION['mensaje']='El alias o el correo para tu usuario ya existen';
-						header('Location: index.php');
-					}
-			}else{
-				//si no google verificara si es un proceso anormal
-				echo"<h1 class='mt-2'>Esta ejecutando un proceso irregular</h1>";
+	// 					$acode=rand(999999,111111);
+	// 					$estado='inactivo';
+	// 					$foto='default.png';
+	// 					$pago=0;
+	// 					$date=date('Y-m-d H:i:s');
+	// 					$email=$_POST['email'];
+    //         			$usuario=new Usuario(null,$_POST['alias'], $_POST['nombres'],$_POST['apellidos'],$email,$_POST['pwd'],null,null,$date,$pago,$acode,$estado,$foto);
+	// 					Usuario::save($usuario);
+	// 					//var_dump($usuario);
+	// 					//die();
+	// 					$_SESSION['mensaje']='Registro guardado satisfactoriamente';
+	// 					$this->showConfirmation();
+	// 					//enviar_correo */
+	// 					// require_once('Views/Layouts/layout.php');*/
+    //     				$to=$email;
+    //     				$subject='Activación de la cuenta ';
+    //     				$message = 'Codigo de confirmacion: ['.$acode.'] . Por favor no comparta este codigo con nadie por motivos de segurida.';
+    //     				$headers = array(
+    //     				 	'From' => 'app-clinica@motion.com.sv',
+    //     					'Reply-To' => 'jose360ramos@gmail.com',
+    //     				 	'X-Mailer' => 'PHP/' . phpversion()
+    //     				);
+    //     				mail($to, $subject, $message, $headers);
+	// 					//header('Location: index.php');
+	// 					//require_once('Views/Layouts/layout.php');*/
+	// 				}else{
+	// 					$_SESSION['mensaje']='El alias o el correo para tu usuario ya existen';
+	// 					header('Location: index.php');
+	// 				}
+	// 		}else{
+	// 			//si no google verificara si es un proceso anormal
+	// 			echo"<h1 class='mt-2'>Esta ejecutando un proceso irregular</h1>";
 
-			}
-		}else{
-			echo"<h1 class='mt-2'>Debe completar el Captcha</1>";
-		}
-	}
+	// 		}
+	// 	}else{
+	// 		echo"<h1 class='mt-2'>Debe completar el Captcha</1>";
+	// 	}
+	// }
 
 	public function save(){
 		$existe=false;
-		$consulta=Usuario::all($_SESSION['usuario_id']);
+		$consulta=Usuario::all();
 		foreach($consulta as $usuario)
 		{
-			if (strcmp($usuario->getEmail(),$_POST['email'])==0 ) 
+			if (strcmp($usuario->getCorreo(),$_POST['email'])==0 ) 
 			{
 				$existe=True;
 			}
@@ -141,19 +135,12 @@ class UsuarioController
 
 		if(!$existe)
 		{
-			$acode=rand(999999,111111);
-			$estado='activo';
-			$foto='default.png';
-			$pago=0;
-			$date=date('Y-m-d H:i:s');
-			$tipo=implode(', ', $_POST['tipoVivienda']);
-			$email=$_POST['email'];
-       	 	$usuario=new Usuario(null,$tipo, $_POST['nombres'],$_POST['apellidos'],$email,$_POST['pwd'],null,null,$date,$pago,$acode,$estado,$foto);
+       	 	$usuario=new Usuario(null,$_POST['nombre'],$_POST['apellido'],$_POST['usuario'],$_POST['email'],$_POST['pwd'],null,null,null,$_POST['aceptaTerminos'],1);
 			Usuario::save($usuario);
-						//var_dump($usuario);
-						//die();
-				$_SESSION['mensaje']='Registro guardado satisfactoriamente';
-				$this->showUsuarios();
+						// var_dump($usuario);
+						// die();
+			$_SESSION['mensaje']='Registro guardado satisfactoriamente';
+			$this->showLogin();
 		}
 		else
 		{
@@ -262,30 +249,20 @@ class UsuarioController
 
 	//función que valida el usuario esté registrado
 	public function login(){
-		// echo 'login() <br/>'.$_POST['email'];
-		$usuarios=[];
-		$usuarios=Usuario::findByEmail($_POST['email']);
-		if(isset($usuarios) && !empty($usuarios)) {
-			// echo 'isset($usuarios) && !empty($usuarios) <br/>';
-			foreach($usuarios as $usuario){
-				// echo 'foreach($usuarios as $usuario) <br/>';
-				if(password_verify($_POST['pwd'],$usuario->getPassword())){					
-					$_SESSION['usuario_id']=$usuario->getId();
-					$_SESSION['usuario_usuario']=$usuario->getUsuario();
-					$_SESSION['usuario']=TRUE;
-				}
+		$usuario=Usuario::getByEmail($_POST['email']);
+		if(isset($usuario) && !empty($usuario)) {
+			if(password_verify($_POST['pwd'], $usuario->getContrasenia()))
+			{
+				$_SESSION['usuario_id']=$usuario->getId();
+				$_SESSION['usuario_alias']=$usuario->getAlias();
+				$_SESSION['usuario']=true;
 			}
+			
 
 			if($_SESSION['usuario']){
 				$action='welcome';
 				require_once('Views/Layouts/layout.php');
 				header('Location: index.php');
-			}
-			else
-			{
-				$_SESSION['mensaje']='Email o contraseña invalidos';
-				$_SESSION['mensaje']='Verifique que su correo fue activado correctamente.';
-				$this->errorLogin();	
 			}
 		}
 		else
@@ -305,10 +282,8 @@ class UsuarioController
 	}
 
 	public function logout() {
-		unset($_SESSION['usuario']);
-		unset($_SESSION['usuario_id']);
-		unset($_SESSION['usuario_name']);
-		unset($_SESSION['usuario_alias']);
+		session_unset();
+		session_destroy();
 		header('Location: index.php');
 	}
 

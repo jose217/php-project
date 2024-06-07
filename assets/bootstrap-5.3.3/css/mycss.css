@@ -1,0 +1,25 @@
+.text-center{
+    text-align: center;
+}
+
+#loginBackground{
+    /* background-image: url("../../../assets/img/fondoLogin.jpg"); */
+    background-color: #101010;
+}
+
+.colorFormLogin{
+    background-color: #1F1F1F;
+}
+
+.bgInputs{
+    background-color: #1C2833;
+}
+
+.backgroundForLoginForm{
+    border-radius: 1rem 0 0 1rem;
+    width: 28rem;
+}
+
+.logo{
+    width: 5rem;
+}

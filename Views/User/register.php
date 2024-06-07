@@ -1,70 +1,99 @@
-<div class="container">
-	<h2 class="mt-3">Registro de Usuario</h2>
+<div class="container mt-3" style="width:50rem;">
 
-	<!-- < ?php //echo date('Y-m-d H:i:s'); ?> -->
-	  <form id="form" action='?controller=usuario&action=save' method='post'>
-	  	
-		<div class="form-group">
-			<label class="mt-3" for="nombres">Nombres:</label>
-		    <input type="text" class="form-control" id="nombres" name="nombres" required="true" placeholder="Ingrese sus nombres" autocomplete="off">
+	<div class="">
+
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title mb-4">Registrar Nueva Cuenta</h5>
+				<form action="?controller=usuario&action=save" method="POST">
+					<!-- 2 column grid layout with text inputs for the first and last names -->
+					<div class="row mb-4">
+						<div class="col">
+							<div data-mdb-input-init class="form-outline">
+								<input type="text" id="nombre" name="nombre" class="form-control" />
+								<label class="form-label" for="nombre">Nombre</label>
+							</div>
+						</div>
+						<div class="col">
+							<div data-mdb-input-init class="form-outline">
+								<input type="text" id="apellido" name="apellido" class="form-control" />
+								<label class="form-label" for="apellido">Apellido</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mb-4">
+						<div class="col">
+							<div data-mdb-input-init class="form-outline">
+								<input type="text" id="usuario" name="usuario" class="form-control" required />
+								<label class="form-label" for="usuario">Usuario</label>
+							</div>
+						</div>
+						<div class="col">
+							<div data-mdb-input-init class="form-outline">
+								<input type="text" id="tipoUsuario" name="tipoUsuario" class="form-control"
+									value="Default" readonly />
+								<label class="form-label" for="tipoUsuario">Tipo de Usuario</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- Email input -->
+					<div data-mdb-input-init class="form-outline mb-4">
+						<input type="email" id="email" name="email" class="form-control" required />
+						<label class="form-label" for="email">Correo</label>
+					</div>
+
+					<!-- Password input -->
+					<div data-mdb-input-init class="form-outline mb-4">
+						<input type="password" id="pwd" name="pwd" class="form-control" required />
+						<label class="form-label" for="pwd">Contraseña</label>
+					</div>
+
+					<div data-mdb-input-init class="form-outline mb-4">
+						<input type="password" id="pwd2" class="form-control" />
+						<label class="form-label" for="pwd2">Repetir contraseña</label>
+					</div>
+					<div id="error-message" style="color: red; display: none;">Las contraseñas no coinciden.</div>
+
+					<!-- Checkbox -->
+					<div class="form-check d-flex justify-content-center mb-4">
+						<input class="form-check-input me-2" type="checkbox" name="aceptaTerminos"
+							id="aceptaTerminos" required />
+						<label class="form-check-label" for="aceptaTerminos">Aceptar Terminos</label>
+					</div>
+
+					<!-- Submit button -->
+					<button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block mb-4">Crear
+						Cuenta</button>
+
+				</form>
+				<button type="button" class="btn btn-primary" data-mdb-ripple-init
+					onclick="location.href='?controller=usuario&action=showLogin'">Regresar</button>
+			</div>
 		</div>
 
-		<div class="form-group">
-			<label class="mt-3" for="apellidos">Apellidos:</label>
-		    <input type="text" class="form-control" id="apellidos" name="apellidos" required="true" placeholder="Ingrese sus apellidos" autocomplete="off">
-		</div>
+	</div>
 
-		<label for="tipoVivienda" class="col-auto col-form-label">Tipo de Usuario:</label>
-        <div class="col-auto">
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" name="tipoVivienda[]" type="radio" id="tipoVivienda" value="Administrador" checked>
-            <label class="form-check-label" for="inlineCheckbox1">Administrador</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" name="tipoVivienda[]" type="radio" id="tipoVivienda" value="Tecnico">
-            <label class="form-check-label" for="inlineCheckbox1">Tecnico</label>
-          </div>
-        </div>
-      
-		<div class="form-group">
-		    <label class="mt-3" for="email">Email:</label>
-		    <input type="email" class="form-control" id="email" name="email" required="true" placeholder="Ingrese su email" autocomplete="off">
-		</div>
-
-		<div class="form-group">
-			<label class="mt-3" for="pregunta">Pregunta</label>
-		    <input type="text" class="form-control" id="pregunta" name="pregunta" required="true" placeholder="Ingrese una pregunta" autocomplete="off">
-		</div>
-
-		<div class="form-group">
-			<label class="mt-3" for="respuesta">Respuesta:</label>
-		    <input type="text" class="form-control" id="respuesta" name="respuesta" required="true" placeholder="Ingrese una respuesta" autocomplete="off">
-		</div>
-
-		<div class="form-group">
-		    <label class="mt-3" for="pwd">Contraseña</label>
-		    <input type="password" class="form-control" id="pwd" name="pwd" required="true" placeholder="Ingrese su contraseña">
-		</div>
-		<div class="form-group">
-			<label class="mt-3" for="pwd2">Confirmar Contraseña</label>
-			<input type="password" class="form-control" id="pwd2" name="pwd2" required="true" placeholder="Confirme su contraseña">
-		</div>
-		<div id="error" class="alert ocultar alert-danger mt-3" role="alert">Las contraseñas no coinciden, verifique si son correctas !!</div>
-		<script>$(".ocultar").hide();</script>
-
-		<!-- prd -->
-		<!-- <div class="g-recaptcha mt-3" data-sitekey="6Lftf_caAAAAAA63ZpucM85TZ6ilfu5OOA2ZBsfU"></div> -->
-		<!-- devlocal -->
-		<!-- <div class="g-recaptcha mt-3" data-sitekey="6Le1qVEdAAAAAIfyXxddWFvKxRoiOsFz0cBeMJDp"></div> -->
-		<!-- devonline -->
-		<div class="d-flex justify-content-center">
-		    <button type="submit" id="submit" name="guardar" class="btn btn-success mt-3 col-md-2"><i class="fas fa-save"></i> Guardar</button>
-      </div>
-	</form>
 </div>
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"></script>
+
 <script>
-$("#form").validate({rules:{pwd:{minlength:4,maxlength:25,},pwd2:{equalTo:"#pwd",minlength:4,maxlength:25}},
-messages:{pwd:{minlength:"<div class='mt-3 alert alert-danger' role='alert'>La contraseña no puede ser menor de 4 caracteres</div>",maxlength:"<div class='alert alert-danger' role='alert'>La contraseña no puede ser mayor de 25 caracteres</div>" },
-pwd2:{equalTo:"<div class='mt-3 alert alert-danger' role='danger'>La contraseña debe ser igual a la anterior",minlength:"<div class='mt-3 alert alert-danger' role='alert'>La contraseña no puede ser menor de 4 caracteres</div>", maxlength:"<div class='alert alert-danger' role='alert'>La contraseña no puede ser mayor de 25 caracteres</div>" }}});
+	document.getElementById('pwd2').addEventListener('keyup', function () {
+		var pwd = document.getElementById('pwd').value;
+		var pwd2 = document.getElementById('pwd2').value;
+		var errorMessage = document.getElementById('error-message');
+
+		if (pwd !== pwd2) {
+			errorMessage.style.display = 'block';
+		} else {
+			errorMessage.style.display = 'none';
+		}
+	});
 </script>

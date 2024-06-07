@@ -14,42 +14,46 @@
 				require_once('Models/Usuario.php');
 				$controller= new UsuarioController();
 				break; 
-			case 'poligono':
-				require_once('Models/Poligono.php');
-				$controller=new PoligonoController();
+			case 'libro':
+				//require_once('Models/Poligono.php');
+				$controller=new LibroController();
 				break; 
-			case 'lote':
-				require_once('Models/Lote.php');
-				$controller=new LoteController();
+			case 'bodega':
+				require_once('Models/Bodega.php');
+				$controller=new BodegaController();
 				break;
-			case 'evaluacionV':
-				require_once('Models/EvaluacionV.php');
-				$controller=new EvaluacionVController();
-				break;
-			case 'etapa':
-				require_once('Models/Etapa.php');
-				$controller=new EtapaController();
-				break;
-			case 'mesActivo':
-				require_once('Models/MesActivo.php');
-				$controller=new MesActivoController();
-				break;
-			case 'residencia':
-				require_once('Models/Residencia.php');
-				$controller=new ResidenciaController();
-				break;
-			case 'catalogos':
-				require_once('Models/Catalogos.php');
-				$controller=new catalogosController();
-				break;
-			case 'InspeccionSolicitud':
-				require_once('Models/InspeccionSolicitud.php');
-				$controller=new InspeccionSolicitudController();
-				break;
-			case 'Inspeccion':
-				require_once('Models/Inspeccion.php');
-				$controller=new InspeccionController();
-				break;												
+			// case 'lote':
+			// 	require_once('Models/Lote.php');
+			// 	$controller=new LoteController();
+			// 	break;
+			// case 'evaluacionV':
+			// 	require_once('Models/EvaluacionV.php');
+			// 	$controller=new EvaluacionVController();
+			// 	break;
+			// case 'etapa':
+			// 	require_once('Models/Etapa.php');
+			// 	$controller=new EtapaController();
+			// 	break;
+			// case 'mesActivo':
+			// 	require_once('Models/MesActivo.php');
+			// 	$controller=new MesActivoController();
+			// 	break;
+			// case 'residencia':
+			// 	require_once('Models/Residencia.php');
+			// 	$controller=new ResidenciaController();
+			// 	break;
+			// case 'catalogos':
+			// 	require_once('Models/Catalogos.php');
+			// 	$controller=new catalogosController();
+			// 	break;
+			// case 'InspeccionSolicitud':
+			// 	require_once('Models/InspeccionSolicitud.php');
+			// 	$controller=new InspeccionSolicitudController();
+			// 	break;
+			// case 'Inspeccion':
+			// 	require_once('Models/Inspeccion.php');
+			// 	$controller=new InspeccionController();
+			// 	break;												
 		}
 		//llama a la acción del controlador
 		$controller->{$action }();
@@ -59,18 +63,8 @@
 	//array con los controladores y sus respectivas acciones
 	$controllers= array(
 						'usuario'=>['showUsuarios','register','save','showregister', 'update', 'delete', 'showLogin','login','logout','error','welcome','validarCedula','pay','confirmation','showConfirmation','recovery','RecEmailVerify','recoverySms','confirmationRecovery','confRecovery','buscar','showupdate'],
-						'poligono'=>['register','registerV2','save', 'show', 'showupdate','update', 'delete','buscar','buscarExtendida'],
-						'lote'=>['register','save', 'show', 'showupdate','update', 'delete','reporteHistorico','buscar','buscarExtendida','registerV2','savecontinue','add'],
-						'evaluacionV'=>['register','showUpdateTec','save','savecontinue','show','delete','deleteTec','showupdate','update','updateTec','savelastnumber','updateNewNumber','buscarExtendida','showHistoCambios','buscarHistorial','selectPorMes','selectPorMesTec','showLecturaEMP','registerTec','saveTec','savecontinueTec','allR','buscarExtendidaTec','saveObservation','generateExcel','showGenerateReport'],
-						'etapa'=>['register','save','registerV2','show','update','delete','showupdate','buscar'],
-						'residencia'=>['register','save','registerV2','show','delete','update','showupdate','buscar'],  
-						'mesActivo'=>['register','save','registerV2','show','delete','update','updateStatus','buscarExtendida','showupdate'],
-						'catalogos'=>['registerTNegocio','saveTipoNegocio','deleteTNegocio','showTNegocio','updateTNegocio','showBusquedaTN',
-										'showEMedidor','registerEMedidor','saveEMedidor','deleteEMedidor','updateEMedidor','buscarEMedidor','showupdateEMedidor'
-										,'buscar', 'show','update','showupdate',
-										'showMotivoInspeccion','updateMotivoInspeccion','registerMotivoInspeccion','saveMotivoInspeccion','deleteMotivoInspeccion','buscarMotivoInspeccion','showupdateMotivoInspeccion'],
-						'InspeccionSolicitud'=>['register','save','show','delete','update','updateStatus','buscarExtendida','showupdate'],
-						'Inspeccion'=>['register','save','show','delete','update','updateStatus','buscarExtendida','showupdate','showSolicitudesByClientActive', 'getDocumentInsId']				
+						'libro'=>['viewRegister'],
+						'bodega'=>['showRegister','save','getMunicipio','show','showUpdate','update']				
 						);
 	//verifica que el controlador enviado desde index.php esté dentro del arreglo controllers
 	if (array_key_exists($controller, $controllers)) {

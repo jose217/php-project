@@ -1,23 +1,31 @@
 <?php 
-/**
-* Modelo para el acceso a la base de datos y funciones CRUD
-* Autor: Elivar Largo
-* Sitio Web: wwww.ecodeup.com
-*/
 class Usuario
 {
 	private $id;
-	private $usuario;
-	private $email;
-	private $password;
-	
-	
-	function __construct($id,$usuario,$email,$password)
+    private $nombre;
+    private $apellido;
+    private $alias;
+    private $correo;
+    private $contrasenia;
+    private $departamento;
+    private $municipio;
+    private $dui;
+	private $acepta_terminos;
+	private $tipoUsuario;
+
+	public function __construct($id, $nombre, $apellido, $alias, $correo, $contrasenia, $departamento, $municipio, $dui, $acepta_terminos, $tipoUsuario)
 	{
 		$this->setId($id);
-		$this->setUsuario($usuario);
-		$this->setEmail($email);
-		$this->setPassword($password);
+        $this->setNombre($nombre);
+        $this->setApellido($apellido);
+        $this->setAlias($alias);
+        $this->setCorreo($correo);
+        $this->setContrasenia($contrasenia);
+        $this->setDepartamento($departamento);
+        $this->setMunicipio($municipio);
+        $this->setDui($dui);
+		$this->setAcepta_Terminos($acepta_terminos);
+		$this->setTipoUsuario($tipoUsuario);
 	}
 
 	public function getId(){
@@ -28,31 +36,98 @@ class Usuario
 		$this->id = $id;
 	}
 
-	public function getUsuario(){
-		return $this->usuario;
+	public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    }
+
+    public function getApellido()
+    {
+        return $this->apellido;
+    }
+
+    public function setApellido($apellido)
+    {
+        $this->apellido = $apellido;
+    }
+
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+    }
+
+	public function getCorreo(){
+		return $this->correo;
 	}
 
-	public function setUsuario($usuario){
-		$this->usuario = $usuario;
+	public function setCorreo($correo){
+		$this->correo = $correo; 
 	}
 
-	public function getEmail(){
-		return $this->email;
+	public function getContrasenia(){
+		return $this->contrasenia;
 	}
 
-	public function setEmail($email){
-		$this->email = $email;
+	public function setContrasenia($contrasenia) {
+		$this->contrasenia=$contrasenia;
 	}
 
-	public function getPassword(){
-		return $this->password;
+    public function getDepartamento()
+    {
+        return $this->departamento;
+    }
+
+    public function setDepartamento($departamento)
+    {
+        $this->departamento = $departamento;
+    }
+
+    public function getMunicipio()
+    {
+        return $this->municipio;
+    }
+
+    public function setMunicipio($municipio)
+    {
+        $this->municipio = $municipio;
+    }
+
+    public function getDui()
+    {
+        return $this->dui;
+    }
+
+    public function setDui($dui)
+    {
+        $this->dui = $dui;
 	}
 
-	public function setPassword($password){
-		$this->password = $password;
+	public function getAcepta_Terminos(){
+		return $this->acepta_terminos;
 	}
 
-	//opciones CRUD
+	public function setAcepta_Terminos($acepta_terminos){
+		$this->acepta_terminos=$acepta_terminos;
+	}
+
+	public function getTipoUsuario(){
+		return $this->tipoUsuario;
+	}
+
+	public function setTipoUsuario($tipoUsuario){
+		$this->tipoUsuario = $tipoUsuario;
+	}
+
 
 	//función para obtener todos los usuarios
 	public static function all(){
@@ -62,11 +137,42 @@ class Usuario
 
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($sql->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
+			$listaUsuarios[] = new Usuario(
+				$usuario['id'],
+				$usuario['nombre'], 
+				$usuario['apellido'],
+				$usuario['alias'],
+				$usuario['correo'],
+				$usuario['contrasenia'],
+				$usuario['departamento'],
+				$usuario['municipio'],
+				$usuario['dui'],
+				$usuario['acepta_terminos'],
+				$usuario['tipo_usuario']
+			);
 		}
 		return $listaUsuarios;
 	}
 
+	public static function save($usuario){
+		$db=Db::getConnect();
+		$insert=$db->prepare('INSERT INTO usuarios VALUES (NULL,:nombre,:apellido,:alias,:correo,:contrasenia,:departamento,:municipio,:dui,:acepta_terminos,:tipoUsuario)');
+		$insert->bindValue('nombre',$usuario->getNombre());
+		$insert->bindValue('apellido',$usuario->getApellido());
+		$insert->bindValue('alias',$usuario->getAlias());
+		$insert->bindValue('correo',$usuario->getCorreo());
+		//encripta la clave
+		$newPass = password_hash($usuario->getContrasenia(), PASSWORD_DEFAULT);
+		//var_dump($pass);
+		//die();
+		$insert->bindValue('contrasenia',$newPass);
+		$insert->bindValue('departamento',$usuario->getDepartamento());
+		$insert->bindValue('municipio',$usuario->getMunicipio());
+		$insert->bindValue('dui',$usuario->getDui());
+		$insert->bindValue('acepta_terminos',$usuario->getAcepta_Terminos());
+		$insert->bindValue('tipoUsuario',$usuario->getTipoUsuario());
+		$insert->execute();
+	}
 
 	public static function allByFilter($usuario){
 		$listaFiltro =[];
@@ -87,7 +193,7 @@ class Usuario
 		$sql->execute();
 		// carga en la $listaPacientes cada registro desde la base de datos
 		foreach ($sql->fetchAll() as $usuario) {
-			$listaFiltro[]= new Usuario($usuario['id'],$usuario['alias'], $usuario['nombres'],$usuario['apellidos'],$usuario['email'], $usuario['clave'], $usuario['respuesta'], $usuario['pregunta'],$usuario['fecha_ingreso'],$usuario['pago'],$usuario['acode'],$usuario['estado'],$usuario['foto']);
+			$listaFiltro[]= new Usuario($usuario['id'],$usuario['nombre'], $usuario['apellido'],$usuario['alias'],$usuario['correo'], $usuario['contrasenia'], $usuario['departamento'], $usuario['pregunta'],$usuario['fecha_ingreso'],$usuario['pago'],$usuario['acode'],$usuario['estado'],$usuario['foto']);
 
 		}
 		return $listaFiltro;
@@ -95,33 +201,8 @@ class Usuario
 		
 	}
 
-
-
-
-
-
 	//la función para registrar un usuario
-	public static function save($usuario){
-		$db=Db::getConnect();
-		$insert=$db->prepare('INSERT INTO usuarios VALUES (NULL,:alias,:nombres,:apellidos,:email,:clave,:pregunta,:respuesta,:fecha_ingreso,:pago,:acode,:estado,:foto)');
-		$insert->bindValue('alias',$usuario->getAlias());
-		$insert->bindValue('nombres',$usuario->getNombres());
-		$insert->bindValue('apellidos',$usuario->getApellidos());
-		$insert->bindValue('email',$usuario->getEmail());
-		//encripta la clave
-		$pass=password_hash($usuario->getClave(),PASSWORD_DEFAULT);
-		//var_dump($pass);
-		//die();
-		$insert->bindValue('clave',$pass);
-		$insert->bindValue('pregunta',$usuario->getPregunta());
-		$insert->bindValue('respuesta',$usuario->getRespuesta());
-		$insert->bindValue('fecha_ingreso',$usuario->getFecha_Ingreso());
-		$insert->bindValue('pago',$usuario->getPago());
-		$insert->bindValue('acode',$usuario->getAcode());
-		$insert->bindValue('estado',$usuario->getEstado());
-		$insert->bindValue('foto',$usuario->getFoto());
-		$insert->execute();
-	}
+	
 
 	//funcion para confirmar correo
 	public static function confirmation($usuario){
@@ -135,22 +216,22 @@ class Usuario
 	//la función para actualizar 
 	public static function update($usuario){
 		$db=Db::getConnect();
-		$update=$db->prepare('UPDATE usuarios SET alias=:alias, nombres=:nombres, apellidos=:apellidos, email=:email WHERE id=:id');
+		$update=$db->prepare('UPDATE usuarios SET alias=:alias, nombres=:nombres, apellidos=:apellidos, correo=:correo WHERE id=:id');
 		$update->bindValue('id',$usuario->id);
 		$update->bindValue('alias',$usuario->alias);
 		$update->bindValue('nombres',$usuario->nombres);
 		$update->bindValue('apellidos',$usuario->apellidos);
-		$update->bindValue('email',$usuario->email);
+		$update->bindValue('correo',$usuario->correo);
 		$update->execute();
 	}
 	public static function updatepass($usuario){
 		$db=Db::getConnect();
-		$update=$db->prepare('UPDATE usuarios SET alias=:alias, nombres=:nombres, apellidos=:apellidos, email=:email, clave=:clave WHERE id=:id');
+		$update=$db->prepare('UPDATE usuarios SET alias=:alias, nombres=:nombres, apellidos=:apellidos, correo=:correo, clave=:clave WHERE id=:id');
 		$update->bindValue('id',$usuario->id);
 		$update->bindValue('alias',$usuario->alias);
 		$update->bindValue('nombres',$usuario->nombres);
 		$update->bindValue('apellidos',$usuario->apellidos);
-		$update->bindValue('email',$usuario->email);
+		$update->bindValue('correo',$usuario->correo);
 		$update->bindValue('clave',$usuario->clave);
 		$update->execute();
 	}
@@ -158,8 +239,8 @@ class Usuario
 	//function update code for reset password
 	public static function updatecode($usuario){
 		$db=Db::getConnect();
-		$update=$db->prepare('UPDATE usuarios SET acode=:acode WHERE email=:email');
-		$update->bindValue('email',$usuario->email);
+		$update=$db->prepare('UPDATE usuarios SET acode=:acode WHERE correo=:correo');
+		$update->bindValue('correo',$usuario->correo);
 		$update->bindValue('acode',$usuario->acode);
 		$update->execute();
 		// var_dump($update);
@@ -192,23 +273,71 @@ class Usuario
 		$select->execute();
 		//asignarlo al objeto usuario
 		$usuarioDb=$select->fetch();
-		$usuario= new Usuario($usuarioDb['id'],$usuarioDb['usuario'],$usuarioDb['email'],$usuarioDb['password']);
-		//var_dump($usuario);
-		//die();
+		$usuario = new Usuario(
+			$usuarioDb['id'],
+			$usuarioDb['nombre'], 
+			$usuarioDb['apellido'],
+			$usuarioDb['alias'],
+			$usuarioDb['correo'],
+			$usuarioDb['contrasenia'],
+			$usuarioDb['departamento'],
+			$usuarioDb['municipio'],
+			$usuarioDb['dui'],
+			$usuarioDb['acepta_terminos'],
+			$usuarioDb['tipo_usuario']
+		);
+		
+		return $usuario;
+	}
+
+	public static function getByEmail($correo){
+		//buscar
+		$db=Db::getConnect();
+		$select=$db->prepare('SELECT * FROM usuarios WHERE correo=:correo');
+		$select->bindValue('correo',$correo);
+		$select->execute();
+		//asignarlo al objeto usuario
+		$usuarioDb=$select->fetch();
+		$usuario = new Usuario(
+			$usuarioDb['id'],
+			$usuarioDb['nombre'], 
+			$usuarioDb['apellido'],
+			$usuarioDb['alias'],
+			$usuarioDb['correo'],
+			$usuarioDb['contrasenia'],
+			$usuarioDb['departamento'],
+			$usuarioDb['municipio'],
+			$usuarioDb['dui'],
+			$usuarioDb['acepta_terminos'],
+			$usuarioDb['tipo_usuario']
+		);
+		
 		return $usuario;
 	}
 	
+	
 	//función para obtener todos los usuarios
 
-	public static function findByEmail($email){
+	public static function findByEmail($correo){
 		$listaUsuarios =[];
 		$db=Db::getConnect();
-		$query=$db->prepare('SELECT * FROM usuarios WHERE EMAIL=:email');
-		$query->bindValue("email",$email);		
+		$query=$db->prepare('SELECT * FROM usuarios WHERE correo=:correo');
+		$query->bindValue("correo",$correo);		
 		$query->execute();
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($query->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
+			$listaUsuarios[] = new Usuario(
+				$usuario['id'],
+				$usuario['nombre'], 
+				$usuario['apellido'],
+				$usuario['alias'],
+				$usuario['correo'],
+				$usuario['contrasenia'],
+				$usuario['departamento'],
+				$usuario['municipio'],
+				$usuario['dui'],
+				$usuario['acepta_terminos']
+			);
 		}
 		return $listaUsuarios;
 	}	
@@ -220,7 +349,18 @@ class Usuario
 		$query->execute();
 		// carga en la $listaUsuarios cada registro desde la base de datos
 		foreach ($query->fetchAll() as $usuario) {
-			$listaUsuarios[]= new Usuario($usuario['id'],$usuario['usuario'], $usuario['email'],$usuario['password']);
+			$listaUsuarios[] = new Usuario(
+				$usuario['id'],
+				$usuario['nombre'], 
+				$usuario['apellido'],
+				$usuario['alias'],
+				$usuario['correo'],
+				$usuario['contrasenia'],
+				$usuario['departamento'],
+				$usuario['municipio'],
+				$usuario['dui'],
+				$usuario['acepta_terminos']
+			);
 		}
 		return $listaUsuarios;
 	}	
